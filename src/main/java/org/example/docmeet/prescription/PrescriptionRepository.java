@@ -1,6 +1,6 @@
 package org.example.docmeet.prescription;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
-public interface PrescriptionRepository extends JpaRepository<Prescription, Integer> {
+public interface PrescriptionRepository extends ReactiveCrudRepository<Prescription, Integer> {
 }

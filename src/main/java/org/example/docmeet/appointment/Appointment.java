@@ -1,38 +1,29 @@
 package org.example.docmeet.appointment;
 
-import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
-import org.example.docmeet.doctorgroup.DoctorGroup;
-import org.example.docmeet.patient.Patient;
+import org.example.docmeet.appointment.enums.AppointmentStateEnum;
+import org.example.docmeet.appointment.enums.AppointmentTypeEnum;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
+@Builder
 @Data
 @Table(name = "appointment")
 public class Appointment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @ManyToOne
-    @JoinColumn(name = "doctor_group_id", nullable = false)
-    private DoctorGroup doctorGroup;
-
-    @ManyToOne
-    @JoinColumn(name = "patient_id")
-    private Patient patient;
-
-    @Column(nullable = false)
-    private LocalDateTime date;
-
-    @Column(nullable = false)
-    private String type;
-
-    @Column(nullable = false)
-    private String state = "available";
-
-    @Column
+    private Integer doctorId;
+    private Integer patientId;
+    private LocalDateTime dateTime;
+    private AppointmentTypeEnum type;
+    private AppointmentStateEnum state;
     private String note;
+    private String patientNote;
+    private BigDecimal rating;
+
 }

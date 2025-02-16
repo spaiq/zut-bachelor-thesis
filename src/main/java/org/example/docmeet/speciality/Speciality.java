@@ -1,4 +1,4 @@
-package org.example.docmeet.prescription;
+package org.example.docmeet.speciality;
 
 import lombok.Builder;
 import lombok.Data;
@@ -7,12 +7,10 @@ import org.springframework.data.relational.core.mapping.Table;
 
 @Builder
 @Data
-@Table(name = "prescription")
-public class Prescription {
+@Table(name = "speciality")
+public class Speciality {
 
     @Id
     private Integer id;
-    private Integer appointmentId;
-    private String code;
-    private String description;
+    private String name;
 }

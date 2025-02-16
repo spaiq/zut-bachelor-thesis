@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: docmeet
+  ai:
+    openai:
+      api-key:
+  r2dbc:
+    url:
+    username:
+    password:
+  flyway:
+    user:
+    password:
+    url:
