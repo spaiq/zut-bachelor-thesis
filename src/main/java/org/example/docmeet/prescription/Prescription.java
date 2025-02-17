@@ -4,6 +4,9 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.lang.NonNull;
+
+import java.time.LocalDateTime;
 
 @Builder
 @Data
@@ -12,7 +15,10 @@ public class Prescription {
 
     @Id
     private Integer id;
+    @NonNull
     private Integer appointmentId;
-    private String code;
+    @NonNull
+    private LocalDateTime dateTime;
+    @NonNull
     private String description;
 }

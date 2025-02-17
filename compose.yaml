@@ -1,9 +1,46 @@
 services:
   postgres:
-    image: 'postgres:latest'
+    image: "postgres:latest"
     environment:
-      - 'POSTGRES_DB=docmeet'
-      - 'POSTGRES_PASSWORD=root'
-      - 'POSTGRES_USER=root'
+      - "POSTGRES_DB=docmeet"
+      - "POSTGRES_PASSWORD="
+      - "POSTGRES_USER="
     ports:
-      - '5432'
+      - "15562:5432"
+  keycloakdb:
+    image: "postgres:latest"
+    volumes:
+      - kc_postgres_data:/var/lib/postgresql/data
+    environment:
+      - "POSTGRES_DB=keycloak"
+      - "POSTGRES_PASSWORD="
+      - "POSTGRES_USER="
+    ports:
+      - "15563:5432"
+  keycloak_web:
+    image: "quay.io/keycloak/keycloak:latest"
+    container_name: "keycloak_web"
+    environment:
+      KC_DB: "postgres"
+      KC_DB_URL: "jdbc:postgresql://keycloakdb:5432/keycloak"
+      KC_DB_USER: ""
+      KC_DB_PASSWORD: ""
+
+      KC_HOSTMANE: "localhost"
+      KC_PORT: "8080"
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+
+      KC_LOG_LEVEL: "info"
+      KC_METRICS_ENABLED: "true"
+      KC_HEALTH_ENABLED: "true"
+      KEYCLOAK_ADMIN: ""
+      KEYCLOAK_ADMIN_PASSWORD: ""
+    command: "start-dev"
+    depends_on:
+      - "keycloakdb"
+    ports:
+      - "15564:8080"
+
+volumes:
+  kc_postgres_data:

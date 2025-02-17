@@ -2,10 +2,11 @@ package org.example.docmeet.user;
 
 import lombok.Builder;
 import lombok.Data;
-import org.example.docmeet.user.enums.TotpAlgorithmEnum;
-import org.example.docmeet.user.enums.UserRoleEnum;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.lang.NonNull;
+
+import java.util.UUID;
 
 @Builder
 @Data
@@ -13,15 +14,17 @@ import org.springframework.data.relational.core.mapping.Table;
 public class User {
 
     @Id
-    private Integer id;
+    private UUID id;
+    @NonNull
     private String email;
-    private String password;
-    private String seed;
-    private TotpAlgorithmEnum totpAlgorithm;
+    @NonNull
     private String name;
+    @NonNull
     private String secondName;
+    @NonNull
     private String surname;
+    @NonNull
     private String pesel;
+    @NonNull
     private String phoneNumber;
-    private UserRoleEnum role;
 }
