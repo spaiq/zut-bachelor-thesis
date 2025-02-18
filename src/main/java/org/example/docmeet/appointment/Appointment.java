@@ -1,12 +1,14 @@
 package org.example.docmeet.appointment;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 import org.example.docmeet.appointment.enums.AppointmentStateEnum;
 import org.example.docmeet.appointment.enums.AppointmentTypeEnum;
+import org.example.docmeet.validation.CreateValidation;
+import org.example.docmeet.validation.UpdateValidation;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
-import org.springframework.lang.NonNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,18 +20,19 @@ import java.util.UUID;
 public class Appointment {
 
     @Id
+    @NotBlank(groups = UpdateValidation.class)
     private Integer id;
-    @NonNull
+    @NotBlank(groups = CreateValidation.class)
     private UUID doctorId;
-    @NonNull
+    @NotBlank(groups = CreateValidation.class)
     private UUID patientId;
-    @NonNull
+    @NotBlank(groups = CreateValidation.class)
     private LocalDateTime dateTime;
-    @NonNull
+    @NotBlank(groups = CreateValidation.class)
     private AppointmentTypeEnum type;
-    @NonNull
+    @NotBlank(groups = CreateValidation.class)
     private AppointmentStateEnum state;
-    @NonNull
+    @NotBlank(groups = CreateValidation.class)
     private String note;
     private String patientNote;
     private BigDecimal rating;

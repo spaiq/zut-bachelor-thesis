@@ -2,5 +2,7 @@ package org.example.docmeet.doctor;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
-public interface DoctorRepository extends ReactiveCrudRepository<Doctor, Integer> {
+import java.util.UUID;
+
+public interface DoctorRepository extends ReactiveCrudRepository<Doctor, UUID> {
 }

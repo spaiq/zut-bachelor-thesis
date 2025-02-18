@@ -3,10 +3,10 @@ package org.example.docmeet.speciality;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
-import org.example.docmeet.annotations.Unique;
+import org.example.docmeet.validation.CreateValidation;
+import org.example.docmeet.validation.UpdateValidation;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
-import org.springframework.lang.NonNull;
 
 @Builder
 @Data
@@ -14,7 +14,8 @@ import org.springframework.lang.NonNull;
 public class Speciality {
 
     @Id
+    @NotBlank(groups = UpdateValidation.class)
     private Integer id;
-    @NotBlank
+    @NotBlank(groups = CreateValidation.class)
     private String name;
 }

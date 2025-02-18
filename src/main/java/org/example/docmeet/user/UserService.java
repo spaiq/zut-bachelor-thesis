@@ -1,30 +1,46 @@
 package org.example.docmeet.user;
 
 import lombok.RequiredArgsConstructor;
+import org.example.docmeet.authorization.HasAnyRole;
+import org.example.docmeet.authorization.IsAdmin;
+import org.example.docmeet.authorization.RequireOwnership;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.UUID;
 
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final UserRepository repository;
 
+    @IsAdmin
     public Flux<User> findAll() {
-        return userRepository.findAll();
+        return repository.findAll();
     }
 
-    public Mono<User> findById(Integer id) {
-        return userRepository.findById(id);
+    @IsAdmin
+    public Mono<User> findById(UUID id) {
+        return repository.findById(id);
     }
 
+    @RequireOwnership
+    public Mono<User> create(User user) {
+        return repository.create(user);
+    }
+
+    @HasAnyRole("{client_admin, client_user}")
+    @RequireOwnership
     public Mono<User> save(User user) {
-        return userRepository.save(user);
+        return repository.save(user);
     }
-    
-    public Mono<Void> deleteById(Integer id) {
-        return userRepository.deleteById(id);
+
+    @IsAdmin
+    public Mono<Void> deleteById(UUID id) {
+        return repository.deleteById(id);
     }
 }

@@ -1,6 +1,7 @@
 package org.example.docmeet.speciality;
 
 import lombok.RequiredArgsConstructor;
+import org.example.docmeet.authorization.IsAdmin;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -15,6 +16,7 @@ public class SpecialityService {
         return repository.findAll();
     }
 
+    @IsAdmin
     public Mono<Speciality> save(Speciality speciality) {
         return repository.save(speciality);
     }

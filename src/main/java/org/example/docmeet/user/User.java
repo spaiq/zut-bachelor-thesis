@@ -1,30 +1,33 @@
 package org.example.docmeet.user;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
+import org.example.docmeet.validation.CreateValidation;
+import org.example.docmeet.validation.UpdateValidation;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
-import org.springframework.lang.NonNull;
 
 import java.util.UUID;
 
 @Builder
 @Data
-@Table(name = "user")
+@Table(name = "users")
 public class User {
 
     @Id
+    @NotBlank(groups = UpdateValidation.class)
     private UUID id;
-    @NonNull
+    @NotBlank(groups = CreateValidation.class)
     private String email;
-    @NonNull
+    @NotBlank(groups = CreateValidation.class)
     private String name;
-    @NonNull
+    @NotBlank(groups = CreateValidation.class)
     private String secondName;
-    @NonNull
+    @NotBlank(groups = CreateValidation.class)
     private String surname;
-    @NonNull
+    @NotBlank(groups = CreateValidation.class)
     private String pesel;
-    @NonNull
+    @NotBlank(groups = CreateValidation.class)
     private String phoneNumber;
 }
