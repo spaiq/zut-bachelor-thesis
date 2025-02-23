@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import org.example.docmeet.appointment.enums.AppointmentStateEnum;
 import org.example.docmeet.appointment.enums.AppointmentTypeEnum;
+import org.example.docmeet.constraints.ImmutableFieldConstraint;
 import org.example.docmeet.validation.CreateValidation;
 import org.example.docmeet.validation.UpdateValidation;
 import org.springframework.data.annotation.Id;
@@ -12,7 +13,6 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Builder
 @Data
@@ -22,17 +22,20 @@ public class Appointment {
     @Id
     @NotBlank(groups = UpdateValidation.class)
     private Integer id;
+    @ImmutableFieldConstraint(groups = UpdateValidation.class)
     @NotBlank(groups = CreateValidation.class)
-    private UUID doctorId;
-    @NotBlank(groups = CreateValidation.class)
-    private UUID patientId;
+    private Integer doctorId;
+    @ImmutableFieldConstraint(groups = UpdateValidation.class)
+    private Integer patientId;
     @NotBlank(groups = CreateValidation.class)
     private LocalDateTime dateTime;
     @NotBlank(groups = CreateValidation.class)
     private AppointmentTypeEnum type;
+    @ImmutableFieldConstraint(groups = UpdateValidation.class)
     @NotBlank(groups = CreateValidation.class)
     private AppointmentStateEnum state;
     @NotBlank(groups = CreateValidation.class)
+    private String address;
     private String note;
     private String patientNote;
     private BigDecimal rating;

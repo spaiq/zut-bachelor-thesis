@@ -8,8 +8,6 @@ import org.example.docmeet.validation.UpdateValidation;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.LocalDateTime;
-
 @Builder
 @Data
 @Table(name = "prescription")
@@ -20,8 +18,6 @@ public class Prescription {
     private Integer id;
     @NotBlank(groups = CreateValidation.class)
     private Integer appointmentId;
-    @NotBlank(groups = CreateValidation.class)
-    private LocalDateTime dateTime;
     @NotBlank(groups = CreateValidation.class)
     private String description;
 }

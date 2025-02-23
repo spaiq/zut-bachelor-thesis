@@ -1,0 +1,2 @@
+ALTER TABLE doctor
+    ADD COLUMN title VARCHAR(50);

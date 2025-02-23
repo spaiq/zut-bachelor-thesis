@@ -3,7 +3,8 @@ package org.example.docmeet.appointment.enums;
 public enum AppointmentStateEnum {
     AVAILABLE,
     BOOKED,
-    CANCELLED,
+    CANCELLED_BY_PATIENT,
+    CANCELLED_BY_DOCTOR,
     COMPLETED,
     MISSED
 }

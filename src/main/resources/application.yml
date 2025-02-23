@@ -18,6 +18,8 @@ spring:
         jwt:
           issuer-uri: http://localhost:15564/realms/docmeet
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+  main:
+    banner-mode: console
 logging:
   level:
     web: debug
@@ -26,3 +28,16 @@ jwt:
   auth:
     converter:
       resource-id: docmeet-api
+      principal-attribute: preferred_username
+
+management:
+  tracing:
+    sampling:
+      probability: 1
+
+
+springdoc:
+  swagger-ui:
+    oauth:
+      client-id: docmeet-api
+      client-secret:

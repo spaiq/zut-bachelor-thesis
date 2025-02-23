@@ -24,20 +24,27 @@ public class JwtAuthConverter implements Converter<Jwt, Mono<AbstractAuthenticat
 
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
     @Value("${jwt.auth.converter.resource-id}")
-    private final String resourceId = "docmeet-api";
+    private String resourceId;
+    @Value("${jwt.auth.converter.principal-attribute}")
+    private String principalAttribute;
 
     @Override
     public Mono<AbstractAuthenticationToken> convert(@NonNull Jwt jwt) {
-        Collection<GrantedAuthority> authorities = Stream.concat(
-                jwtGrantedAuthoritiesConverter.convert(jwt).stream(),
-                extractResourceRoles(jwt).stream()
-        ).collect(Collectors.toSet());
+        Collection<GrantedAuthority> authorities = Stream.concat(jwtGrantedAuthoritiesConverter.convert(jwt).stream(),
+                                                                 extractResourceRoles(jwt).stream())
+                                                         .collect(Collectors.toSet());
 
-        return Mono.just(new JwtAuthenticationToken(
-                jwt,
-                authorities,
-                JwtClaimNames.SUB
-        ));
+        return Mono.just(new JwtAuthenticationToken(jwt, authorities, getPrincipalClaimName(jwt)));
+    }
+
+    private String getPrincipalClaimName(Jwt jwt) {
+        String claimName = JwtClaimNames.SUB;
+
+        if (principalAttribute != null) {
+            claimName = principalAttribute;
+        }
+
+        return jwt.getClaim(claimName);
     }
 
     private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt) {
@@ -58,10 +65,9 @@ public class JwtAuthConverter implements Converter<Jwt, Mono<AbstractAuthenticat
 
         resourceRoles = (Collection<String>) resource.get("roles");
 
-        return resourceRoles
-                .stream()
-                .map(role -> "ROLE_" + role)
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toSet());
+        return resourceRoles.stream()
+                            .map(role -> "ROLE_" + role)
+                            .map(SimpleGrantedAuthority::new)
+                            .collect(Collectors.toSet());
     }
 }
