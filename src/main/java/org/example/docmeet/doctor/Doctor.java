@@ -1,8 +1,10 @@
 package org.example.docmeet.doctor;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.docmeet.validation.CreateValidation;
 import org.springframework.data.annotation.Id;
@@ -10,6 +12,8 @@ import org.springframework.data.relational.core.mapping.Table;
 
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "doctor")
 @Slf4j
 public class Doctor {

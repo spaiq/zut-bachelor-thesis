@@ -1,8 +1,10 @@
 package org.example.docmeet.appointment;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.docmeet.appointment.enums.AppointmentStateEnum;
 import org.example.docmeet.appointment.enums.AppointmentTypeEnum;
 import org.example.docmeet.constraints.ImmutableFieldConstraint;
@@ -16,6 +18,8 @@ import java.time.LocalDateTime;
 
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "appointment")
 public class Appointment {
 

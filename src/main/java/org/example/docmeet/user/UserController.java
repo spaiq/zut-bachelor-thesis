@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.resource.NoResourceFoundException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -38,6 +39,7 @@ public class UserController {
     @GetMapping("/user/{id}")
     public Mono<User> findById(@PathVariable Integer id) {
         return service.findById(id)
+                      .switchIfEmpty(Mono.error(new NoResourceFoundException("User with id %s not found".formatted(id))))
                       .doOnError(e -> log.error("Error while finding user with id {}", id, e))
                       .doOnSuccess(User::logUserFound);
     }
@@ -62,23 +64,22 @@ public class UserController {
                     Authentication authentication) {
         return Mono.just(authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_client_admin")) ||
                          user.getEmail().equals(authentication.getName()))
-                   .flatMap(isPermitted -> isPermitted ? Mono.empty() :
+                   .flatMap(isPermitted -> isPermitted ? service.save(user) :
                            Mono.error(new AccessDeniedException("Access to user %s denied for %s".formatted(user,
                                                                                                             authentication.getName()))))
                    .doOnSuccess(o -> log.info("Granted access to user {} for {}", user, authentication.getName()))
-                .then(service.save(user))
-                .doOnSuccess(savedUser -> {
-                    exchange.getResponse().setStatusCode(HttpStatus.CREATED);
-                    URI location = exchange.getRequest().getURI();
-                    exchange.getResponse()
-                            .getHeaders()
-                            .setLocation(location.resolve(location.getPath() + "/" + savedUser.getId()));
-                    log.info("User with id {} saved", savedUser.getId());
-                })
-                .doOnError(e -> log.error("Error while saving user {}", user, e))
-                .onErrorResume(DuplicateKeyException.class,
-                               e -> Mono.error(new DataIntegrityViolationException("Cannot save user - duplicate key",
-                                                                                   e)));
+                   .doOnSuccess(savedUser -> {
+                       exchange.getResponse().setStatusCode(HttpStatus.CREATED);
+                       URI location = exchange.getRequest().getURI();
+                       exchange.getResponse()
+                               .getHeaders()
+                               .setLocation(location.resolve(location.getPath() + "/" + savedUser.getId()));
+                       log.info("User with id {} saved", savedUser.getId());
+                   })
+                   .doOnError(e -> log.error("Error while saving user {}", user, e))
+                   .onErrorResume(DuplicateKeyException.class,
+                                  e -> Mono.error(new DataIntegrityViolationException("Cannot save user - duplicate key",
+                                                                                      e)));
     }
 
     @PatchMapping("/user/{id}")

@@ -3,6 +3,7 @@ package org.example.docmeet.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.docmeet.authorization.IsAdmin;
+import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.resource.NoResourceFoundException;
@@ -24,7 +25,7 @@ public class UserService {
     }
 
     @IsAdmin
-    public Mono<User> findById(Integer id) {
+    public Mono<User> findById(@NonNull Integer id) {
         return repository.findById(id);
     }
 
@@ -74,11 +75,10 @@ public class UserService {
     @IsAdmin
     public Mono<Void> deleteById(Integer id) {
         return repository.existsById(id)
-                         .flatMap(bool -> bool ? Mono.empty() :
+                         .flatMap(bool -> bool ? repository.deleteById(id) :
                                  Mono.error(new NoResourceFoundException("Cannot delete. User with id %s does not exist".formatted(
                                          id))))
                          .doOnError(e -> log.error("Error while deleting user with id {}", id, e))
-                         .switchIfEmpty(repository.deleteById(id))
                          .doOnSuccess(o -> log.info("User with id {} deleted", id))
                 .then();
     }

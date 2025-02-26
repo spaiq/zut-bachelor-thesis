@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.resource.NoResourceFoundException;
-import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -87,11 +86,10 @@ public class DoctorService {
     }
 
     @IsAdmin
-    public Mono<DoctorResponse> update(Integer id, Doctor doctor, ServerWebExchange exchange) {
+    public Mono<DoctorResponse> update(Integer id, Doctor doctor) {
         return repository.findById(id)
-                         .switchIfEmpty(Mono.error(new NoResourceFoundException(exchange.getRequest()
-                                                                                        .getPath()
-                                                                                        .toString())))
+                         .switchIfEmpty(Mono.error(new NoResourceFoundException(
+                                 "Cannot update. Doctor with id %s does not exist".formatted(id))))
                          .doOnError(e -> log.error("Error while updating doctor with id {}", id, e))
                          .doOnSuccess(Doctor::logDoctorFound)
                          .flatMap(existingDoctor -> {
@@ -108,10 +106,9 @@ public class DoctorService {
     @IsAdmin
     public Mono<Void> deleteById(Integer id) {
         return repository.existsById(id)
-                         .flatMap(bool -> bool ? Mono.empty() : Mono.error(new NoResourceFoundException(
+                         .flatMap(bool -> bool ? repository.deleteById(id) : Mono.error(new NoResourceFoundException(
                                  "Cannot delete. Doctor with id %s does not exist".formatted(id))))
                          .doOnError(e -> log.error("Error while deleting doctor with id {}", id, e))
-                         .switchIfEmpty(repository.deleteById(id))
                          .doOnSuccess(o -> log.info("User with id {} deleted", id))
                 .then();
     }

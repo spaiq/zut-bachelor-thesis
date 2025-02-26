@@ -209,9 +209,10 @@ public class AppointmentService {
 
     public Mono<Void> deleteById(Integer appointmentId) {
         return repository.existsById(appointmentId)
-                         .flatMap(bool -> bool ? Mono.empty() : Mono.error(new IllegalArgumentException(
-                                 "Cannot delete. Appointment with id %s does not exist".formatted(appointmentId))))
-                .then(repository.deleteById(appointmentId))
-                .log();
+                         .flatMap(exists -> exists ? repository.deleteById(appointmentId) :
+                                 Mono.error(new IllegalArgumentException(
+                                         "Cannot delete. Appointment with id %s does not exist".formatted(appointmentId))))
+                         .log()
+                .then();
     }
 }

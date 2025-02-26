@@ -74,10 +74,8 @@ public class DoctorController {
     }
 
     @PatchMapping("/doctor/{id}")
-    public Mono<DoctorResponse> update(@PathVariable Integer id,
-                                       @RequestBody Doctor doctor,
-                                       ServerWebExchange exchange) {
-        return service.update(id, doctor, exchange);
+    public Mono<DoctorResponse> update(@PathVariable Integer id, @RequestBody Doctor doctor) {
+        return service.update(id, doctor);
 
     }
 

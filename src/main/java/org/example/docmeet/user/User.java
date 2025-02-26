@@ -3,8 +3,10 @@ package org.example.docmeet.user;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.docmeet.constraints.ImmutableFieldConstraint;
 import org.example.docmeet.validation.CreateValidation;
@@ -15,6 +17,8 @@ import org.springframework.data.relational.core.mapping.Table;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "user_account")
 @Slf4j
 public class User {
